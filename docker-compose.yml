@@ -1,0 +1,30 @@
+version: '2'
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/gitreports
+    links:
+      - redis
+      - sidekiq
+    depends_on:
+      - db
+    command: /bin/sh -c "rm -f /gitreports/tmp/pids/server.pid && bundle exec rails s -p 3000 -b 0.0.0.0"
+  sidekiq:
+    build: .
+    volumes:
+      - .:/gitreports
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    links:
+      - db
+      - redis
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
