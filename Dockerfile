@@ -11,10 +11,6 @@ ADD Gemfile $INSTALL_PATH/Gemfile
 ADD Gemfile.lock $INSTALL_PATH/Gemfile.lock
 RUN bundle install --without development test
 
-# Set Rails to run in production
-ENV RAILS_ENV production
-ENV RACK_ENV production
-
 # Copy the main application
 ADD . $INSTALL_PATH
 VOLUME ["$INSTALL_PATH/public"]
